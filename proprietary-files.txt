@@ -1,6 +1,6 @@
 # MTK-IMS
 # from full_certus-userdebug 10 QP1A.190711.020 mp1V91561 test-keys
--framework/mediatek-common.jar
+#-framework/mediatek-common.jar
 -framework/mediatek-framework.jar
 -framework/mediatek-ims-base.jar
 -framework/mediatek-ims-common.jar

@@ -16,11 +16,16 @@
 
 $(call inherit-product, $(SRC_TARGET_DIR)/product/core_64_bit.mk)
 $(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
-$(call inherit-product, $(SRC_TARGET_DIR)/product/product_launched_with_o_mr1.mk)
+$(call inherit-product, $(SRC_TARGET_DIR)/product/telephony.mk)
+PRODUCT_SHIPPING_API_LEVEL := 30
+
+#PRODUCT_PROPERTY_OVERRIDES += ro.product.device=hoki
+PRODUCT_PROPERTY_OVERRIDES += ro.product.display_name=Hoki
+
 
 # IMS
-PRODUCT_PACKAGES += \
-    mtk-ims-telephony
+#PRODUCT_PACKAGES += \
+#    mtk-ims-telephony
 
 # Screen density
 PRODUCT_AAPT_CONFIG := normal
@@ -65,14 +70,14 @@ DEVICE_PACKAGE_OVERLAYS += $(LOCAL_PATH)/overlay-lineage
 endif
 
 # IMS
-PRODUCT_BOOT_JARS += \
-    mediatek-common \
-    mediatek-framework \
-    mediatek-ims-base \
-    mediatek-ims-common \
-    mediatek-telecom-common \
-    mediatek-telephony-base \
-    mediatek-telephony-common
+#PRODUCT_BOOT_JARS += \
+#	mediatek-common \
+#    mediatek-framework \
+#    mediatek-ims-base \
+#    mediatek-ims-common \
+#    mediatek-telecom-common \
+#    mediatek-telephony-base \
+#    mediatek-telephony-common
 
 PRODUCT_PACKAGES += \
     ImsServiceBase
@@ -138,6 +143,43 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     TetheringConfigOverlay \
     WifiOverlay
+
+ALLOW_MISSING_DEPENDENCIES := true
+CLOCKWORK_SYSUI_MODULE := ClockworkSysUiGoogle
+CLOCKWORK_TARGET_FSPDK := true
+
+$(call inherit-product, device/google/clockwork/build/clockwork_google.mk)
+$(call inherit-product, device/google/clockwork/build/clockwork_ringtones.mk)
+$(call inherit-product, device/google/clockwork/build/clockwork_audio.mk)
+$(call inherit-product-if-exists,vendor/google_clockwork/products/clockwork_services.mk)
+$(call inherit-product, device/google/clockwork/build/wearable-mdpi-1024-dalvik-heap.mk)
+
+
+# Wearcore feature
+PRODUCT_COPY_FILES += \
+	frameworks/native/data/etc/wearable_core_hardware.xml:system/etc/permissions/wearable_core_hardware.xml
+
+PRODUCT_CHARACTERISTICS := nosdcard,watch
+
+PRODUCT_PACKAGES += \
+    ClockworkExampleWatchFace \
+    ExtServices \
+    ExtShared
+
+PRODUCT_PACKAGES += \
+	libwebviewchromium \
+	libwebviewchromium_loader \
+	libstatssocket \
+	libwebviewchromium_plat_support
+
+PRODUCT_COPY_FILES += \
+    device/google/clockwork/bootanimations/square_280/bootanimation.zip:system/media/bootanimation.zip
+	
+# Fossil Companion configs
+PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
+	ro.oem.companion_package=com.fossil.wearables.fossil.staging \
+	ro.oem.companion_digest=7b130cb49ed8809fd2e89f6a9812ed3176ec3337 \
+	ro.oem.ios_companion_app_ids=5M339SCS33.com.misfit.fossilq.staging
 
 # Call proprietary blob setup
 $(call inherit-product-if-exists, vendor/xiaomi/certus64/certus64-vendor.mk)
